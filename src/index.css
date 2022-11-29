@@ -5,3 +5,9 @@ body,
   padding: 0;
   box-sizing: border-box;
 }
+
+.message-error {
+  margin-top: 1rem;
+  color: crimson;
+  font-weight: 600;
+}

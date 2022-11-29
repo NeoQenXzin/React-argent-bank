@@ -19,12 +19,12 @@ export default function Header() {
           </li>
           <li>
             <Link to="/signin" className="main-nav-item">
-              <i class="fa fa-user-circle"></i> Sign in
+              <i className="fa fa-user-circle"></i> Sign in
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link to="/user">User </Link>
-          </li>
+          </li> */}
           {/* <div>
         <a class="main-nav-item" href="./user.html">
           <i class="fa fa-user-circle"></i>
