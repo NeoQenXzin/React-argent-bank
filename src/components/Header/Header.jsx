@@ -2,8 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
 import logoHome from "../../assets/img/argentBankLogo.png";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Header() {
+  const { isLogged } = useSelector((state) => ({
+    ...state.logUserReducer,
+  }));
+  const dispatch = useDispatch();
+  const reset = () => {
+    dispatch({
+      type: "DISCONNECT",
+    });
+    localStorage.clear();
+    console.log(isLogged);
+  };
   return (
     <header>
       <nav>
@@ -17,24 +29,20 @@ export default function Header() {
               />
             </Link>
           </li>
-          <li>
-            <Link to="/signin" className="main-nav-item">
-              <i className="fa fa-user-circle"></i> Sign in
-            </Link>
-          </li>
-          {/* <li>
-            <Link to="/user">User </Link>
-          </li> */}
-          {/* <div>
-        <a class="main-nav-item" href="./user.html">
-          <i class="fa fa-user-circle"></i>
-          Tony
-        </a>
-        <a class="main-nav-item" href="./index.html">
-          <i class="fa fa-sign-out"></i>
-          Sign Out
-        </a>
-      </div> */}
+          {isLogged === true ? (
+            <li>
+              <Link to="/" className="main-nav-logo" onClick={reset}>
+                <i className="fa fa-sign-out"></i>
+                Sign Out
+              </Link>
+            </li>
+          ) : (
+            <li>
+              <Link to="/signin" className="main-nav-item">
+                <i className="fa fa-user-circle"></i> Sign in
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
     </header>

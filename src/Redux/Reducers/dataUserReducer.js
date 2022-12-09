@@ -5,18 +5,25 @@ const INITIAL_STATE = {
     password: "",
     firstName: "",
     lastName: "",
+    // isLogged: "",
+    // token: "",
   },
 };
 
-function dataUserReducer(state, action) {
+function dataUserReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case "GETUSER": {
+    case "GETUSERDATA": {
+      console.log("get user data process");
       return {
         ...state,
-        userData: action.payload,
+        userData: {
+          firstName: action.payload,
+          lastName: action.payload,
+        },
       };
     }
   }
+  // console.log(state);
   return state;
 }
 

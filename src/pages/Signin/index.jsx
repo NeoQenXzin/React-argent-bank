@@ -1,40 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Signin() {
+  // state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [token, setToken] = useState([]);
+  //store
+  const dispatch = useDispatch();
+  const { isLogged, userToken } = useSelector((state) => ({
+    ...state.logUserReducer,
+  }));
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  const navigate = useNavigate();
+
+  const getToken = async () => {
     const emailError = document.querySelector(".email-error");
     const passwordError = document.querySelector(".password-error");
     const errorMessage = document.querySelector(".message-error");
-    axios({
+    await axios({
       method: "post",
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
       url: `${process.env.REACT_APP_API_URL}api/v1/user/login`,
-      // withCredentials: true,
       data: {
         email: email,
         password: password,
       },
     })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.data.errors) {
           passwordError.innerHTML = res.data.message;
           emailError.innerHTML = res.data.errors.email;
         } else {
-          window.location = "/user";
+          console.log(res.data.body.token);
+          setToken(res.data.body.token);
+          dispatch({
+            type: "CONNECT",
+            payload: token,
+          });
+          return res.data.body.token;
+          // console.log(res);
         }
       })
       .catch((err) => {
         errorMessage.innerHTML = err.response.data.message;
-        console.log(err);
-        console.log(email);
-        console.log(password);
+        // console.log(err);
       });
   };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    getToken();
+    // localStorage.setItem("token", JSON.stringify(token));
+    console.log(token);
+    console.log("token du reducer :", userToken, isLogged);
+    navigate("/user");
+    // window.location = "/user";
+  };
+
+  useEffect(() => {
+    localStorage.setItem("token", JSON.stringify(token));
+  }, [token]);
 
   return (
     <div className="main bg-dark">
