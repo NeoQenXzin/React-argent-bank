@@ -1,53 +1,55 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import Account from "../../components/Account/Account";
 
 export default function User() {
-  const [token, setToken] = useState();
-  const [name, setName] = useState();
   const dispatch = useDispatch();
 
-  const reset = () => {
-    console.log(name);
-    console.log(token);
-    console.log(userToken);
-    console.log(userName);
+  const testVariable = () => {
+    // console.log(token);
+    console.log({ userToken });
+    console.log(firstName);
+    console.log({ lastName });
+
     // localStorage.clear();
   };
+  // reducer
+  const { userToken } = useSelector((state) => ({ ...state.logUserReducer }));
+  console.log({ userToken });
+
+  const {
+    userData: { firstName, lastName },
+  } = useSelector((state) => ({
+    ...state.dataUserReducer,
+  }));
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("token"));
-    token && setToken(token);
-    getData();
+    // const bToken = JSON.parse(localStorage.getItem("token"));
+    const bToken = userToken;
+    getData(bToken);
 
-    if (token === null) {
+    if (userToken === null) {
       window.location = "/signin";
     }
   }, []);
 
-  // reducer
-  const { userToken } = useSelector((state) => ({
-    ...state.logUserReducer,
-  }));
-  const { userName } = useSelector((state) => ({
-    ...state.dataUserReducer,
-  }));
-
   // appel api et dispatch
-  const getData = () => {
+  const getData = (bToken) => {
+    // console.log(`Bearer ${bToken}`);
     axios({
       method: "post",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${bToken}`,
       },
       url: `${process.env.REACT_APP_API_URL}api/v1/user/profile`,
     })
       .then((res) => {
-        console.log(res);
-        setName(res.data.body.firstName + " " + res.data.body.lastName);
+        // console.log(res);
+        // setName(res.data.body.firstName + " " + res.data.body.lastName);
         dispatch({
           type: "GETUSERDATA",
-          payload: name,
+          payload: res.data,
         });
       })
       .catch((err) => {
@@ -57,22 +59,26 @@ export default function User() {
 
   //Edit
   const editName = () => {
+    // const bToken = JSON.parse(localStorage.getItem("token"));
+    const bToken = userToken;
+
     axios({
       method: "put",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${bToken}`,
       },
       data: {
-        firstName: "newFirstName",
-        lastName: "newLastName",
+        firstName: "jeanus",
+        lastName: "Valdus",
       },
       url: `${process.env.REACT_APP_API_URL}api/v1/user/profile`,
     })
       .then((res) => {
+        // setName(res.data.body.firstName + " " + res.data.body.lastName);
         console.log(res);
         dispatch({
-          type: "EditProfile",
-          payload: "data",
+          type: "EDITUSERNAME",
+          payload: res.data,
         });
       })
       .catch((err) => {
@@ -82,48 +88,33 @@ export default function User() {
 
   return (
     <div className="main bg-dark">
-      <button onClick={reset}>Reset</button>
+      <button onClick={testVariable}>Testeur</button>
       <div className="header">
         <h1>
           Welcome back
           <br />
-          {name}
+          {`${firstName} ${lastName}`}
         </h1>
         <button className="edit-button" onClick={editName}>
           Edit Name
         </button>
       </div>
       <h2 className="sr-only">Accounts</h2>
-      <section className="account">
-        <div className="account-content-wrapper">
-          <h3 className="account-title">Argent Bank Checking (x8349)</h3>
-          <p className="account-amount">$2,082.79</p>
-          <p className="account-amount-description">Available Balance</p>
-        </div>
-        <div className="account-content-wrapper cta">
-          <button className="transaction-button">View transactions</button>
-        </div>
-      </section>
-      <section className="account">
-        <div className="account-content-wrapper">
-          <h3 className="account-title">Argent Bank Savings (x6712)</h3>
-          <p className="account-amount">$10,928.42</p>
-          <p className="account-amount-description">Available Balance</p>
-        </div>
-        <div className="account-content-wrapper cta">
-          <button className="transaction-button">View transactions</button>
-        </div>
-      </section>
-      <section className="account">
-        <div className="account-content-wrapper">
-          <h3 className="account-title">Argent Bank Credit Card (x8349)</h3>
-          <p className="account-amount">$184.30</p>
-          <p className="account-amount-description">Current Balance</p>
-        </div>
-        <div className="account-content-wrapper cta">
-          <button className="transaction-button">View transactions</button>
-        </div>
-      </section>
+      <Account
+        accountTitle="Argent Bank Checking (x8349)"
+        accountAmount="$2,082.79"
+        accountAmountDescription="Available Balance"
+      />
+      <Account
+        accountTitle="Argent Bank Savings (x6712)"
+        accountAmount="$10,928.42"
+        accountAmountDescription="Available Balance"
+      />
+      <Account
+        accountTitle="Argent Bank Credit Card (x8349)"
+        accountAmount="$184.30"
+        accountAmountDescription="Current Balance"
+      />
     </div>
   );
 }
