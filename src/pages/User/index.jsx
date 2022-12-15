@@ -2,18 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Account from "../../components/Account/Account";
+import "./index.css";
 
 export default function User() {
   const dispatch = useDispatch();
+  // state
+  const [newFirstName, setNewFirstName] = useState("");
+  const [newLastName, setNewLastName] = useState("");
+  const [toggle, setToggle] = useState(false);
 
-  const testVariable = () => {
-    // console.log(token);
-    console.log({ userToken });
-    console.log(firstName);
-    console.log({ lastName });
-
-    // localStorage.clear();
-  };
   // reducer
   const { userToken } = useSelector((state) => ({ ...state.logUserReducer }));
   console.log({ userToken });
@@ -34,6 +31,21 @@ export default function User() {
     }
   }, []);
 
+  //fonction
+  const displayModal = () => {
+    !toggle ? setToggle(true) : setToggle(false);
+    const modalEdit = document.querySelector(".modal");
+    !toggle
+      ? modalEdit.classList.remove("hide")
+      : modalEdit.classList.add("hide");
+  };
+
+  const testVariable = () => {
+    console.log({ userToken });
+    console.log(firstName);
+    console.log({ lastName });
+  };
+
   // appel api et dispatch
   const getData = (bToken) => {
     // console.log(`Bearer ${bToken}`);
@@ -45,8 +57,6 @@ export default function User() {
       url: `${process.env.REACT_APP_API_URL}api/v1/user/profile`,
     })
       .then((res) => {
-        // console.log(res);
-        // setName(res.data.body.firstName + " " + res.data.body.lastName);
         dispatch({
           type: "GETUSERDATA",
           payload: res.data,
@@ -68,18 +78,18 @@ export default function User() {
         Authorization: `Bearer ${bToken}`,
       },
       data: {
-        firstName: "jeanus",
-        lastName: "Valdus",
+        firstName: newFirstName,
+        lastName: newLastName,
       },
       url: `${process.env.REACT_APP_API_URL}api/v1/user/profile`,
     })
       .then((res) => {
-        // setName(res.data.body.firstName + " " + res.data.body.lastName);
         console.log(res);
         dispatch({
           type: "EDITUSERNAME",
           payload: res.data,
         });
+        displayModal();
       })
       .catch((err) => {
         console.log(err);
@@ -95,10 +105,35 @@ export default function User() {
           <br />
           {`${firstName} ${lastName}`}
         </h1>
-        <button className="edit-button" onClick={editName}>
-          Edit Name
+
+        {/* Edit  */}
+        <button className="edit-button" onClick={displayModal}>
+          {!toggle ? "Edit Name" : "X"}
         </button>
+        <div className="modal hide">
+          <label htmlFor="firstname">New Firstname : </label>
+          <input
+            type="text"
+            className="new-firstname"
+            id="firstname"
+            onChange={(e) => setNewFirstName(e.target.value)}
+          />
+          <br />
+          <label htmlFor="lastname">New Lastname : </label>
+          <input
+            type="text"
+            className="new-lastname"
+            id="lastname"
+            onChange={(e) => setNewLastName(e.target.value)}
+          />
+          <br />
+          <button className="edit-button-red" onClick={editName}>
+            Edit New Name
+          </button>
+        </div>
       </div>
+
+      {/* Account  */}
       <h2 className="sr-only">Accounts</h2>
       <Account
         accountTitle="Argent Bank Checking (x8349)"
