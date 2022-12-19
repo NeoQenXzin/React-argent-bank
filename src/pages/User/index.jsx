@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Account from "../../components/Account/Account";
@@ -10,26 +11,20 @@ export default function User() {
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
   const [toggle, setToggle] = useState(false);
-
-  // reducer
-  const { userToken } = useSelector((state) => ({ ...state.logUserReducer }));
-  console.log({ userToken });
-
-  const {
-    userData: { firstName, lastName },
-  } = useSelector((state) => ({
-    ...state.dataUserReducer,
-  }));
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // const bToken = JSON.parse(localStorage.getItem("token"));
     const bToken = userToken;
     getData(bToken);
 
-    if (userToken === null) {
-      window.location = "/signin";
+    if (userToken === "") {
+      navigate("/signin");
     }
   }, []);
+
+  // reducer
+  const { userToken } = useSelector((state) => ({ ...state.logUserReducer }));
+  // console.log({ userToken });
 
   //fonction
   const displayModal = () => {
@@ -40,15 +35,8 @@ export default function User() {
       : modalEdit.classList.add("hide");
   };
 
-  const testVariable = () => {
-    console.log({ userToken });
-    console.log(firstName);
-    console.log({ lastName });
-  };
-
   // appel api et dispatch
   const getData = (bToken) => {
-    // console.log(`Bearer ${bToken}`);
     axios({
       method: "post",
       headers: {
@@ -57,6 +45,7 @@ export default function User() {
       url: `${process.env.REACT_APP_API_URL}api/v1/user/profile`,
     })
       .then((res) => {
+        // console.log("mon dispatch");
         dispatch({
           type: "GETUSERDATA",
           payload: res.data,
@@ -66,6 +55,12 @@ export default function User() {
         console.log(err);
       });
   };
+  // console.log("mon use selector");
+  const {
+    userData: { firstName, lastName },
+  } = useSelector((state) => ({
+    ...state.dataUserReducer,
+  }));
 
   //Edit
   const editName = () => {
@@ -98,7 +93,6 @@ export default function User() {
 
   return (
     <div className="main bg-dark">
-      <button onClick={testVariable}>Testeur</button>
       <div className="header">
         <h1>
           Welcome back

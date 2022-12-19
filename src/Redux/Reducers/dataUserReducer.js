@@ -9,8 +9,8 @@ const INITIAL_STATE = {
 function dataUserReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case "GETUSERDATA": {
-      console.log("get user data process");
-      console.log(action.payload.body.firstName);
+      // console.log("get user data process");
+      // console.log(action.payload.body.firstName);
       return {
         ...state,
         userData: {
@@ -20,7 +20,7 @@ function dataUserReducer(state = INITIAL_STATE, action) {
       };
     }
     case "EDITUSERNAME": {
-      console.log("edit user data process");
+      // console.log("edit user data process");
       return {
         ...state,
         userData: {

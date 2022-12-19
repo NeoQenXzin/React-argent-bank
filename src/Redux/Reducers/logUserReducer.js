@@ -7,9 +7,9 @@ const INITIAL_STATE = {
 function logUserReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case "CONNECT": {
-      console.log("Connecté");
-      console.log(action.payload);
-      localStorage.setItem("userToken", action.payload);
+      // console.log("Connecté");
+      // console.log(action.payload);
+      // localStorage.setItem("userToken", action.payload);
 
       return {
         ...state,
@@ -18,7 +18,7 @@ function logUserReducer(state = INITIAL_STATE, action) {
       };
     }
     case "DISCONNECT": {
-      console.log("Déconnecté");
+      // console.log("Déconnecté");
       return {
         ...state,
         userToken: "",

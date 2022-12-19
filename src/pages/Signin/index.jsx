@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -35,7 +35,7 @@ export default function Signin() {
           passwordError.innerHTML = res.data.message;
           emailError.innerHTML = res.data.errors.email;
         } else {
-          console.log(res.data.body.token);
+          // console.log(res.data.body.token);
           dispatch({
             type: "CONNECT",
             payload: res.data.body.token,
@@ -47,7 +47,7 @@ export default function Signin() {
       .catch((err) => {
         errorMessage.innerHTML = err.response.data.message;
       });
-    console.log("token du reducer :", userToken, isLogged);
+    // console.log("token du reducer :", userToken, isLogged);
     // window.location = "/user";
   };
 
