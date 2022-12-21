@@ -8,9 +8,6 @@ function logUserReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case "CONNECT": {
       // console.log("Connecté");
-      // console.log(action.payload);
-      // localStorage.setItem("userToken", action.payload);
-
       return {
         ...state,
         userToken: action.payload,

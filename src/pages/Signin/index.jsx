@@ -1,20 +1,16 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Signin() {
+  const navigate = useNavigate();
   // state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [token, setToken] = useState([]);
+
   //store
   const dispatch = useDispatch();
-  const { isLogged, userToken } = useSelector((state) => ({
-    ...state.logUserReducer,
-  }));
-
-  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -35,20 +31,16 @@ export default function Signin() {
           passwordError.innerHTML = res.data.message;
           emailError.innerHTML = res.data.errors.email;
         } else {
-          // console.log(res.data.body.token);
           dispatch({
             type: "CONNECT",
             payload: res.data.body.token,
           });
-          // localStorage.setItem("token", JSON.stringify(res.data.body.token));
           navigate("/user");
         }
       })
       .catch((err) => {
         errorMessage.innerHTML = err.response.data.message;
       });
-    // console.log("token du reducer :", userToken, isLogged);
-    // window.location = "/user";
   };
 
   return (

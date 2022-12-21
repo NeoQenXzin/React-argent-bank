@@ -27,6 +27,7 @@ export default function User() {
   // console.log({ userToken });
 
   //fonction
+  // Modal Edit User Name
   const displayModal = () => {
     !toggle ? setToggle(true) : setToggle(false);
     const modalEdit = document.querySelector(".modal");
@@ -35,7 +36,7 @@ export default function User() {
       : modalEdit.classList.add("hide");
   };
 
-  // appel api et dispatch
+  // Call api and dispatch
   const getData = (bToken) => {
     axios({
       method: "post",
@@ -55,16 +56,15 @@ export default function User() {
         console.log(err);
       });
   };
-  // console.log("mon use selector");
+
   const {
     userData: { firstName, lastName },
   } = useSelector((state) => ({
     ...state.dataUserReducer,
   }));
 
-  //Edit
+  //Edit user name function
   const editName = () => {
-    // const bToken = JSON.parse(localStorage.getItem("token"));
     const bToken = userToken;
 
     axios({

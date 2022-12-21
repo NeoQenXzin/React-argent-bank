@@ -155,6 +155,37 @@ paths:
           description: User Account not found
       security:
         - Bearer: []
+    post:
+      tags:
+        - User Transactions
+      summary: Add a transaction with form data
+      description: ""
+      operationId: addTransactionWithForm
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          description: Attach Bearer JWT token
+          required: true
+        - name: body
+          in: body
+          description: Transaction object that needs to be added
+          required: true
+          schema:
+            $ref: "#/definitions/Transaction"
+      responses:
+        "201":
+          description: Success! Transaction added.
+          schema:
+            $ref: "#/definitions/Transaction"
+        "405":
+          description: Invalid input
+      security:
+        - Bearer: []
 
   /user/transactions/order/{month}:
     parameters:
@@ -188,37 +219,6 @@ paths:
           description: Unauthorized
         "404":
           description: User account not found
-      security:
-        - Bearer: []
-    post:
-      tags:
-        - User Transactions
-      summary: Add a transaction with form data
-      description: ""
-      operationId: addTransactionWithForm
-      consumes:
-        - application/x-www-form-urlencoded
-      produces:
-        - application/json
-      parameters:
-        - name: Authorization
-          in: header
-          type: string
-          description: Attach Bearer JWT token
-          required: true
-        - name: body
-          in: body
-          description: Transaction object that needs to be added
-          required: true
-          schema:
-            $ref: "#/definitions/Transaction"
-      responses:
-        "201":
-          description: Success! Transaction added.
-          schema:
-            $ref: "#/definitions/Transaction"
-        "405":
-          description: Invalid input
       security:
         - Bearer: []
   /user/transactions/{transactionId}:
@@ -382,11 +382,12 @@ definitions:
           format: int64
         createdAt:
           type: string
-          format: yyyy-mm
+          format: yyyy-mm-dd
+          description: creation date
         month:
           type: string
           format: yyyy-mm
-          description: creation date
+          description: Month of transaction
         title:
           type: string
           description: ref transaction
@@ -406,10 +407,11 @@ definitions:
       createdAt:
         type: string
         format: yyyy-mm
+        description: creation date
       month:
         type: string
         format: yyyy-mm
-        description: creation date
+        description: Month of transaction
       title:
         type: string
         description: ref transaction

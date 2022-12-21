@@ -10,7 +10,6 @@ function dataUserReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case "GETUSERDATA": {
       // console.log("get user data process");
-      // console.log(action.payload.body.firstName);
       return {
         ...state,
         userData: {
